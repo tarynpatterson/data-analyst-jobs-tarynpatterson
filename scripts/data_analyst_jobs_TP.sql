@@ -92,7 +92,7 @@ WHERE title ILIKE '%Analyst%';
 
 -- 12. How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? 
 -- What word do these positions have in common?
--- 4, Data
+-- 4, Tableau
 
 SELECT DISTINCT	title
 FROM data_analyst_jobs
@@ -107,7 +107,7 @@ WHERE title NOT ILIKE '%Analyst%'
 -- 3 weeks for each of the top 4?
 -- Internet & Software - 62, Banks & Financial Services - 61, Consulting & Business Services - 57, Health Care - 52
 
-SELECT Domain, COUNT(title) AS total_jobs
+SELECT Domain, COUNT(title) AS hard_to_fill
 	 FROM 
 	 (SELECT domain, title
 	  FROM data_analyst_jobs
@@ -115,4 +115,4 @@ SELECT Domain, COUNT(title) AS total_jobs
 	 AND days_since_posting > 21
 	 AND domain IS NOT null) AS sub
 GROUP BY domain
-ORDER BY total_jobs DESC;
+ORDER BY hard_to_fill DESC;

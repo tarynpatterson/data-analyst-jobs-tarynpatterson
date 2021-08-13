@@ -105,6 +105,14 @@ WHERE title NOT ILIKE '%Analyst%'
 -- Order your results so that the domain with the greatest number of hard to fill jobs is at the top.
 -- Which three industries are in the top 4 on this list? How many jobs have been listed for more than 
 -- 3 weeks for each of the top 4?
+-- Internet & Software - 62, Banks & Financial Services - 61, Consulting & Business Services - 57, Health Care - 52
 
-SELECT *
-From data_analyst_jobs
+SELECT Domain, COUNT(title) AS total_jobs
+	 FROM 
+	 (SELECT domain, title
+	  FROM data_analyst_jobs
+	  WHERE skill ILIKE '%SQL%'
+	 AND days_since_posting > 21
+	 AND domain IS NOT null) AS sub
+GROUP BY domain
+ORDER BY total_jobs DESC;

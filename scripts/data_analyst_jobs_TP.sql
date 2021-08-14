@@ -14,15 +14,14 @@ LIMIT 10;
 
 -- 3. How many postings are in Tennessee? How many are there in either Tennessee or Kentucky?
 -- Tennessee = 21, Tennesse & Kentucky = 27
-
+7
 SELECT COUNT(location)
 FROM data_analyst_jobs
 WHERE location = 'TN';
 
 SELECT COUNT(location)
 FROM data_analyst_jobs
-WHERE location = 'TN'
-OR location = 'KY';
+WHERE location IN ('TN','KY');
 
 -- 4. How many postings in Tennessee have a star rating above 4?
 -- 3
@@ -30,7 +29,7 @@ OR location = 'KY';
 SELECT COUNT(*)
 FROM data_analyst_jobs
 WHERE location = 'TN'
-AND star_rating > 4;
+	AND star_rating > 4;
 
 -- 5. How many postings in the dataset have a review count between 500 and 1000?
 -- 151
@@ -41,10 +40,11 @@ WHERE review_count BETWEEN 500 AND 1000;
 
 -- 6. Show the average star rating for companies in each state. The output should show the state as 
 -- state and the average rating for the state as avg_rating. Which state shows the highest average rating?
--- Nebraska
+-- Nebraska, ~4.2
 
-SELECT data_analyst_jobs.location AS state, AVG(star_rating) AS avg_rating
+SELECT data_analyst_jobs.location AS state, ROUND(AVG(star_rating),2) AS avg_rating
 FROM data_analyst_jobs
+WHERE star_rating IS NOT null
 GROUP BY state
 ORDER BY avg_rating DESC;
 
@@ -66,19 +66,21 @@ WHERE location = 'CA';
 -- across all locations?
 -- 71
 
-SELECT company, SUM(data_analyst_jobs.review_count) AS total_review_count, AVG(star_rating) AS avg_rating
+SELECT company, SUM(review_count) AS total_review_count, AVG(star_rating) AS avg_rating
 FROM data_analyst_jobs
+WHERE company IS NOT null
 GROUP BY company
-HAVING SUM(data_analyst_jobs.review_count) > 5000
-ORDER BY SUM(data_analyst_jobs.review_count);
+HAVING SUM(review_count) > 5000
+ORDER BY SUM(review_count);
 
 -- 10. Add the code to order the query in #9 from highest to lowest average star rating. Which company 
 -- with more than 5000 reviews across all locations in the dataset has the highest star rating? What is 
 -- that rating?
 -- Google, ~4.3
 
-SELECT company, SUM(data_analyst_jobs.review_count) AS total_review_count, AVG(star_rating) AS avg_rating
+SELECT company, SUM(data_analyst_jobs.review_count) AS total_review_count, ROUND(AVG(star_rating),2) AS avg_rating
 FROM data_analyst_jobs
+WHERE company IS NOT null
 GROUP BY company
 HAVING SUM(data_analyst_jobs.review_count) > 5000
 ORDER BY AVG(star_rating) DESC;
